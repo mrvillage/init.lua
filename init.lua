@@ -206,6 +206,7 @@ require('lazy').setup({
   -- { import = 'custom.plugins' },
 
   'github/copilot.vim',
+  'aserowy/tmux.nvim',
 }, {})
 
 -- [[ Setting options ]]
