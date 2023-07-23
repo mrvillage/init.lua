@@ -561,5 +561,9 @@ cmp.setup {
   },
 }
 
+-- Some keymaps to make me work a bit better
+vim.keymap.set('i', '<C-BS>', 'diw')
+vim.keymap.set('i', '<C-S>', ':w')
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
