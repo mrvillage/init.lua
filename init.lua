@@ -567,5 +567,8 @@ vim.keymap.set('i', '<C-BS>', 'db')
 vim.keymap.set('i', '<C-Del>', 'dw')
 vim.keymap.set('i', '<C-S>', ':w')
 
+-- Settings for me
+vim.wo.relativenumber = true
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
