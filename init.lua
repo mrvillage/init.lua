@@ -563,9 +563,9 @@ cmp.setup {
 }
 
 -- Some keymaps to make me work a bit better
-vim.keymap.set('i', '<C-BS>', 'db')
-vim.keymap.set('i', '<C-Del>', 'dw')
-vim.keymap.set('i', '<C-S>', ':w')
+-- vim.keymap.set('i', '<C-BS>', 'db')
+-- vim.keymap.set('i', '<C-Del>', 'dw')
+-- vim.keymap.set('i', '<C-S>', ':w')
 
 -- Settings for me
 vim.wo.relativenumber = true
