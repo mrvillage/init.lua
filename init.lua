@@ -235,6 +235,8 @@ require('lazy').setup({
     },
   },
   'ray-x/lsp_signature.nvim',
+  'wakatime/vim-wakatime',
+  'numToStr/Comment.nvim',
 }, {})
 
 -- Theme settings
@@ -378,6 +380,23 @@ telescope.setup({
   }
 })
 
+require("Comment").setup()
+
+local esc = vim.api.nvim_replace_termcodes('<ESC>', true, false, true)
+
+vim.keymap.set({ 'n', 'i' }, '<C-_>', require("Comment.api").toggle.linewise.current)
+vim.keymap.set("v", '<C-_>', function()
+  vim.api.nvim_feedkeys(esc, 'nx', false)
+  require("Comment.api").toggle.linewise(vim.fn.visualmode())
+end)
+
+vim.api.nvim_create_autocmd("User", {
+  pattern = "TelescopePreviewerLoaded",
+  callback = function()
+    vim.cmd("setlocal wrap")
+  end,
+})
+
 vim.api.nvim_set_keymap(
   "n",
   "<space>fb",
@@ -420,6 +439,7 @@ vim.keymap.set('n', '<leader>dd', function() require('telescope.builtin').diagno
 vim.keymap.set('n', '<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols,
   { desc = '[W]orkspace [S]ymbols' })
 vim.keymap.set('n', '<leader>i', vim.lsp.buf.hover)
+vim.keymap.set('i', '<C-i>', vim.lsp.buf.hover, { noremap = true })
 vim.keymap.set('n', '<leader>sr', require('telescope.builtin').oldfiles, { desc = '[S]earch [r]ecently opened files' })
 vim.keymap.set('n', '<leader>sc', function()
   -- You can pass additional configuration to telescope to change theme, layout, etc.
@@ -564,17 +584,6 @@ local servers = {
         enforce = true,
       },
     },
-    inlayHints = {
-      lifetimeElisionHints = {
-        enable = 'always',
-      },
-      closureReturnTypeHints = {
-        enable = 'always',
-      },
-      expressionAdjustmentHints = {
-        enable = 'always',
-      },
-    },
     lens = {
       location = 'above_whole_item',
       references = {
@@ -693,8 +702,13 @@ vim.keymap.set('n', '<leader>gg', require('lazygit').lazygitcurrentfile)
 vim.keymap.set('n', '<leader>gr', require('telescope').extensions.lazygit.lazygit)
 vim.keymap.set('n', '<leader>gp', ':terminal git push<CR>')
 vim.keymap.set('n', '<leader>nt', ':terminal powershell<CR>')
-vim.keymap.set('n', '<leader>q', ':bd<CR>')
-vim.keymap.set('n', '<leader>Q', ':bd!<CR>')
+vim.keymap.set('n', '<leader>q', function()
+  vim.api.nvim_buf_delete(vim.api.nvim_get_current_buf(),
+    { force = vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf()):find('term://', 1, true) == 1 })
+end)
+vim.keymap.set('n', '<leader>Q', function()
+  vim.api.nvim_buf_delete(vim.api.nvim_get_current_buf(), { force = true })
+end)
 -- vim.api.nvim_create_autocmd('BufEnter', {
 --  pattern = '*',
 --  callback = function()
