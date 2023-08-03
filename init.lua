@@ -236,7 +236,6 @@ require('lazy').setup({
   },
   'ray-x/lsp_signature.nvim',
   'wakatime/vim-wakatime',
-  'numToStr/Comment.nvim',
 }, {})
 
 -- Theme settings
@@ -285,6 +284,13 @@ vim.o.completeopt = 'menuone,noselect'
 
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
+
+-- Tabs will be spaces
+vim.o.expandtab = true
+vim.o.shiftwidth = 4
+vim.o.smarttab = true
+vim.o.tabstop = 8
+vim.o.softtabstop = 0
 
 -- [[ Basic Keymaps ]]
 
@@ -625,6 +631,21 @@ local servers = {
   taplo = {},
 }
 
+local filetypes = {
+  tailwindcss = { "aspnetcorerazor", "astro", "astro-markdown", "blade", "clojure", "django-html", "htmldjango", "edge",
+    "eelixir", "elixir", "ejs", "erb", "eruby", "gohtml", "haml", "handlebars", "hbs", "html", "html-eex", "heex",
+    "jade", "leaf", "liquid", "markdown", "mdx", "mustache", "njk", "nunjucks", "php", "razor", "slim", "twig", "css",
+    "less", "postcss", "sass", "scss", "stylus", "sugarss", "javascript", "javascriptreact", "reason", "rescript",
+    "typescript", "typescriptreact", "vue", "svelte", "rust" },
+}
+local init_options = {
+  tailwindcss = {
+    userLanguages = {
+      rust = "html",
+    },
+  },
+}
+
 -- Setup neovim lua configuration
 require('neodev').setup()
 
@@ -642,6 +663,8 @@ mason_lspconfig.setup {
 mason_lspconfig.setup_handlers {
   function(server_name)
     require('lspconfig')[server_name].setup {
+      init_options = init_options[server_name] or nil,
+      filetypes = filetypes[server_name] or nil,
       capabilities = capabilities,
       on_attach = on_attach,
       settings = servers[server_name],
