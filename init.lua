@@ -240,6 +240,7 @@ require('lazy').setup({
   'ThePrimeagen/harpoon',
   'RRethy/vim-illuminate',
   'chomosuke/term-edit.nvim',
+  'mhartington/formatter.nvim',
 }, {})
 
 -- Theme settings
@@ -405,6 +406,19 @@ require("Comment").setup({
 require('term-edit').setup({
   prompt_end = { '%$ ', '> ' },
 })
+require('formatter').setup({
+  filetype = {
+    javascript = require("formatter.filetypes.javascript").prettier,
+    typescript = require("formatter.filetypes.typescript").prettier,
+    javascriptreact = require("formatter.filetypes.javascriptreact").prettier,
+    typescriptreact = require("formatter.filetypes.typescriptreact").prettier,
+    graphql = require("formatter.filetypes.graphql").prettier,
+    css = require("formatter.filetypes.css").prettier,
+    markdown = require("formatter.filetypes.markdown").prettier,
+  }
+})
+
+vim.api.nvim_create_autocmd('BufWritePost', { command = ':FormatWrite' })
 
 local esc = vim.api.nvim_replace_termcodes('<ESC>', true, false, true)
 
@@ -518,7 +532,7 @@ require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
   ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim', 'bash', 'css',
     'dart', 'dockerfile', 'gitignore', 'html', 'java', 'json', 'jsdoc', 'javascript', 'latex', 'php', 'phpdoc', 'prisma',
-    'regex', 'sql', 'yaml', 'graphql' },
+    'regex', 'sql', 'yaml', 'graphql', 'markdown', 'markdown_inline', 'lalrpop', 'toml' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
@@ -685,6 +699,7 @@ local servers = {
   sqlls = {},
   tailwindcss = {},
   taplo = {},
+  marksman = {},
 }
 
 local filetypes = {
@@ -779,7 +794,6 @@ cmp.setup {
 
 vim.keymap.set('n', '<leader>g', require('lazygit').lazygitcurrentfile)
 vim.keymap.set('n', '<leader>gg', require('lazygit').lazygitcurrentfile)
-vim.keymap.set('n', '<leader>nt', ':terminal<CR>')
 vim.keymap.set('n', '<leader>q', function()
   vim.api.nvim_buf_delete(vim.api.nvim_get_current_buf(),
     { force = vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf()):find('term://', 1, true) == 1 })
@@ -787,6 +801,7 @@ end)
 vim.keymap.set('n', '<leader>Q', function()
   vim.api.nvim_buf_delete(vim.api.nvim_get_current_buf(), { force = true })
 end)
+vim.keymap.set('t', '<ESC>', '<C-\\><C-N>')
 -- vim.api.nvim_create_autocmd('BufEnter', {
 --  pattern = '*',
 --  callback = function()
@@ -807,5 +822,9 @@ vim.keymap.set('n', '<leader>mm', ':terminal mrvillage ')
 vim.keymap.set('n', '<leader>mr', ':terminal mrvillage run ')
 vim.keymap.set('n', '<leader>ps', ':terminal mrvillage run deploy-pnw -s<CR>')
 vim.keymap.set('n', '<leader>pp', ':terminal mrvillage run deploy-pnw -ps<CR>')
+
+-- Some shortcuts to resolve common typos
+vim.api.nvim_create_user_command('W', 'w', {})
+vim.api.nvim_create_user_command('Q', 'q', {})
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
