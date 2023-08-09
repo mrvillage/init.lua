@@ -236,6 +236,8 @@ require('lazy').setup({
   },
   'ray-x/lsp_signature.nvim',
   'wakatime/vim-wakatime',
+  'ThePrimeagen/harpoon',
+  'RRethy/vim-illuminate',
 }, {})
 
 -- Theme settings
@@ -319,6 +321,13 @@ require('lsp_signature').setup({
 
 })
 
+require('harpoon').setup({
+  menu = {
+    width = vim.api.nvim_win_get_width(0) - 60,
+  },
+  tabline = true,
+})
+
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
 local telescope = require("telescope");
@@ -333,6 +342,7 @@ table.insert(vimgrep_arguments, '!**/.git/*')
 telescope.load_extension("file_browser")
 telescope.load_extension("lazygit")
 telescope.load_extension("live_grep_args")
+telescope.load_extension("harpoon")
 
 local lga_actions = require("telescope-live-grep-args.actions")
 
@@ -343,6 +353,7 @@ telescope.setup({
       i = {
         ['<C-u>'] = false,
         ['<C-d>'] = false,
+        ['<C-p>'] = require('telescope.actions.layout').toggle_preview
       },
     },
   },
@@ -432,7 +443,6 @@ vim.keymap.set('n', '<leader>/', function()
   })
 end, { desc = '[/] Fuzzily search in current buffer' })
 
-vim.keymap.set('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
 vim.keymap.set('n', '<leader>sf', require('telescope.builtin').find_files, { desc = '[S]earch [F]iles' })
 vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
@@ -459,6 +469,41 @@ vim.keymap.set({ 'n', 'v' }, '<C-k>', function()
     require('lsp_signature').toggle_float_win()
   end,
   { silent = true, noremap = true, desc = 'Toggle [K]eyboard signature' })
+
+-- harpoon
+vim.keymap.set("n", "<leader>h", require("harpoon.ui").toggle_quick_menu, { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>a", require("harpoon.mark").add_file, { noremap = true, silent = true })
+for idx = 1, 9 do
+  vim.keymap.set("n", "<leader>t" .. idx,
+    ':lua require("harpoon.term").gotoTerminal({idx = ' .. idx .. ', create_with = ":terminal powershell"})<CR>',
+    { noremap = true, silent = true })
+  vim.keymap.set("n", "<leader>" .. idx, ':lua require("harpoon.ui").nav_file(' .. idx .. ')<CR>',
+    { noremap = true, silent = true })
+end
+vim.keymap.set("n", "<leader>tc", require("harpoon.cmd-ui").toggle_quick_menu, { noremap = true, silent = true })
+
+
+-- moving lines
+vim.keymap.set("n", "m", function()
+  local count = vim.v.count1
+  -- move the line down
+  vim.cmd("m .+" .. count)
+end, { noremap = true, silent = true })
+vim.keymap.set("n", "M", function()
+  local count = vim.v.count1
+  -- move the line up
+  vim.cmd("m .-" .. count)
+end, { noremap = true, silent = true })
+vim.keymap.set("v", "m",
+  ":'<,'>move '>+1<CR>gv=gv", { noremap = true, silent = true })
+vim.keymap.set("v", "M",
+  ":'<,'>move '<-2<CR>gv=gv", { noremap = true, silent = true })
+-- function()
+--   local count = vim.v.count1
+--   -- move the selection down
+--   vim.cmd("'<,'>move .+" .. count .. "<CR>gv=gv")
+-- end
+-- , { noremap = true, silent = true })
 
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
@@ -519,10 +564,10 @@ require('nvim-treesitter.configs').setup {
     swap = {
       enable = true,
       swap_next = {
-        ['<leader>a'] = '@parameter.inner',
+        -- ['<leader>a'] = '@parameter.inner',
       },
       swap_previous = {
-        ['<leader>A'] = '@parameter.inner',
+        -- ['<leader>A'] = '@parameter.inner',
       },
     },
   },
@@ -721,9 +766,8 @@ cmp.setup {
   },
 }
 
+vim.keymap.set('n', '<leader>g', require('lazygit').lazygitcurrentfile)
 vim.keymap.set('n', '<leader>gg', require('lazygit').lazygitcurrentfile)
-vim.keymap.set('n', '<leader>gr', require('telescope').extensions.lazygit.lazygit)
-vim.keymap.set('n', '<leader>gp', ':terminal git push<CR>')
 vim.keymap.set('n', '<leader>nt', ':terminal powershell<CR>')
 vim.keymap.set('n', '<leader>q', function()
   vim.api.nvim_buf_delete(vim.api.nvim_get_current_buf(),
