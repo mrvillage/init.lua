@@ -238,6 +238,7 @@ require('lazy').setup({
   'wakatime/vim-wakatime',
   'ThePrimeagen/harpoon',
   'RRethy/vim-illuminate',
+  'chomosuke/term-edit.nvim',
 }, {})
 
 -- Theme settings
@@ -398,6 +399,9 @@ telescope.setup({
 })
 
 require("Comment").setup()
+require('term-edit').setup({
+  prompt_end = { '%$ ', '> ' },
+})
 
 local esc = vim.api.nvim_replace_termcodes('<ESC>', true, false, true)
 
@@ -475,7 +479,7 @@ vim.keymap.set("n", "<leader>h", require("harpoon.ui").toggle_quick_menu, { nore
 vim.keymap.set("n", "<leader>a", require("harpoon.mark").add_file, { noremap = true, silent = true })
 for idx = 1, 9 do
   vim.keymap.set("n", "<leader>t" .. idx,
-    ':lua require("harpoon.term").gotoTerminal({idx = ' .. idx .. ', create_with = ":terminal powershell"})<CR>',
+    ':lua require("harpoon.term").gotoTerminal({idx = ' .. idx .. '})<CR>',
     { noremap = true, silent = true })
   vim.keymap.set("n", "<leader>" .. idx, ':lua require("harpoon.ui").nav_file(' .. idx .. ')<CR>',
     { noremap = true, silent = true })
@@ -768,7 +772,7 @@ cmp.setup {
 
 vim.keymap.set('n', '<leader>g', require('lazygit').lazygitcurrentfile)
 vim.keymap.set('n', '<leader>gg', require('lazygit').lazygitcurrentfile)
-vim.keymap.set('n', '<leader>nt', ':terminal powershell<CR>')
+vim.keymap.set('n', '<leader>nt', ':terminal<CR>')
 vim.keymap.set('n', '<leader>q', function()
   vim.api.nvim_buf_delete(vim.api.nvim_get_current_buf(),
     { force = vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf()):find('term://', 1, true) == 1 })
