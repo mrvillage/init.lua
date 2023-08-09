@@ -195,6 +195,7 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     dependencies = {
       'nvim-treesitter/nvim-treesitter-textobjects',
+      'JoosepAlviste/nvim-ts-context-commentstring',
     },
     build = ':TSUpdate',
     config = function(_, opts)
@@ -398,7 +399,9 @@ telescope.setup({
   }
 })
 
-require("Comment").setup()
+require("Comment").setup({
+  pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
+})
 require('term-edit').setup({
   prompt_end = { '%$ ', '> ' },
 })
@@ -494,7 +497,7 @@ vim.keymap.set("n", "m", function()
   vim.cmd("m .+" .. count)
 end, { noremap = true, silent = true })
 vim.keymap.set("n", "M", function()
-  local count = vim.v.count1
+  local count = vim.v.count1 + 1
   -- move the line up
   vim.cmd("m .-" .. count)
 end, { noremap = true, silent = true })
@@ -574,6 +577,10 @@ require('nvim-treesitter.configs').setup {
         -- ['<leader>A'] = '@parameter.inner',
       },
     },
+  },
+  context_commentstring = {
+    enable = true,
+    enable_autocmd = false,
   },
 }
 
