@@ -150,6 +150,14 @@ require('lazy').setup({
         component_separators = '|',
         section_separators = '',
       },
+      sections = {
+        lualine_a = { 'mode' },
+        lualine_b = { 'branch', 'diff', 'diagnostics' },
+        lualine_c = { 'filename', 'filesize' },
+        lualine_x = { 'encoding', 'fileformat', 'filetype' },
+        lualine_y = { 'progress' },
+        lualine_z = { 'location' }
+      },
     },
   },
 
@@ -801,7 +809,15 @@ end)
 vim.keymap.set('n', '<leader>Q', function()
   vim.api.nvim_buf_delete(vim.api.nvim_get_current_buf(), { force = true })
 end)
-vim.keymap.set('t', '<ESC>', '<C-\\><C-N>')
+
+vim.api.nvim_create_autocmd("TermOpen", {
+  callback = function(opts)
+    if not opts.file:find('lazygit') then
+      vim.keymap.set('t', '<ESC>', '<C-\\><C-N>', { buffer = opts.buf })
+    end
+  end
+})
+
 -- vim.api.nvim_create_autocmd('BufEnter', {
 --  pattern = '*',
 --  callback = function()
@@ -827,4 +843,11 @@ vim.keymap.set('n', '<leader>pp', ':terminal mrvillage run deploy-pnw -ps<CR>')
 vim.api.nvim_create_user_command('W', 'w', {})
 vim.api.nvim_create_user_command('Q', 'q', {})
 -- The line beneath this is called `modeline`. See `:help modeline`
+-- vim: ts=2 sts=2 sw=2 et
+-- vim: ts=2 sts=2 sw=2 et
+-- vim: ts=2 sts=2 sw=2 et
+-- vim: ts=2 sts=2 sw=2 et
+-- vim: ts=2 sts=2 sw=2 et
+-- vim: ts=2 sts=2 sw=2 et
+-- vim: ts=2 sts=2 sw=2 et
 -- vim: ts=2 sts=2 sw=2 et
