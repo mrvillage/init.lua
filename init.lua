@@ -375,6 +375,7 @@ telescope.setup({
         ['<C-p>'] = require('telescope.actions.layout').toggle_preview
       },
     },
+    path_display = { "truncate" },
   },
   pickers = {
     find_files = {
@@ -433,8 +434,6 @@ require('formatter').setup({
     markdown = require("formatter.filetypes.markdown").prettier,
   }
 })
-
-vim.api.nvim_create_autocmd('BufWritePost', { command = ':FormatWrite' })
 
 local esc = vim.api.nvim_replace_termcodes('<ESC>', true, false, true)
 

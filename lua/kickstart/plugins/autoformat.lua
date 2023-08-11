@@ -68,6 +68,17 @@ return {
             }
           end,
         })
+        vim.api.nvim_create_autocmd('BufWritePost', {
+          group = get_augroup(client),
+          buffer = bufnr,
+          callback = function()
+            if not format_is_enabled then
+              return
+            end
+
+            vim.cmd(':FormatWrite')
+          end
+        })
       end,
     })
   end,
