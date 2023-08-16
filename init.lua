@@ -251,6 +251,7 @@ require('lazy').setup({
     'RRethy/vim-illuminate',
     'chomosuke/term-edit.nvim',
     'mhartington/formatter.nvim',
+    'ThePrimeagen/vim-be-good',
   },
   {
     git = {
