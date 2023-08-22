@@ -377,6 +377,9 @@ telescope.setup({
       },
     },
     path_display = { "truncate" },
+    cache_picker = {
+      num_pickers = 20,
+    },
   },
   pickers = {
     find_files = {
@@ -485,6 +488,8 @@ vim.keymap.set('n', '<leader>sh', require('telescope.builtin').help_tags, { desc
 vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { desc = '[S]earch current [W]ord' })
 vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
+vim.keymap.set('n', '<leader>rs', require('telescope.builtin').resume, { desc = '[R]esume [S]earch' })
+vim.keymap.set('n', '<leader>sp', require('telescope.builtin').pickers, { desc = '[S]how [P]ickers' })
 
 vim.keymap.set('n', '<leader>ds', require('telescope.builtin').lsp_document_symbols, { desc = '[D]ocument [S]ymbols' })
 vim.keymap.set('n', '<leader>dd', function() require('telescope.builtin').diagnostics({ bufnr = 0 }) end,
