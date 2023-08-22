@@ -122,10 +122,10 @@ require('lazy').setup({
           changedelete = { text = '~' },
         },
         on_attach = function(bufnr)
-          vim.keymap.set('n', '<leader>gp', require('gitsigns').prev_hunk,
-            { buffer = bufnr, desc = '[G]o to [P]revious Hunk' })
-          vim.keymap.set('n', '<leader>gn', require('gitsigns').next_hunk,
-            { buffer = bufnr, desc = '[G]o to [N]ext Hunk' })
+          -- vim.keymap.set('n', '<leader>gp', require('gitsigns').prev_hunk,
+          -- { buffer = bufnr, desc = '[G]o to [P]revious Hunk' })
+          -- vim.keymap.set('n', '<leader>gn', require('gitsigns').next_hunk,
+          -- { buffer = bufnr, desc = '[G]o to [N]ext Hunk' })
           vim.keymap.set('n', '<leader>ph', require('gitsigns').preview_hunk,
             { buffer = bufnr, desc = '[P]review [H]unk' })
         end,
@@ -815,7 +815,7 @@ cmp.setup {
 }
 
 vim.keymap.set('n', '<leader>g', require('lazygit').lazygitcurrentfile)
-vim.keymap.set('n', '<leader>gg', require('lazygit').lazygitcurrentfile)
+-- vim.keymap.set('n', '<leader>gg', require('lazygit').lazygitcurrentfile)
 vim.keymap.set('n', '<leader>q', function()
   vim.api.nvim_buf_delete(vim.api.nvim_get_current_buf(),
     { force = vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf()):find('term://', 1, true) == 1 })
