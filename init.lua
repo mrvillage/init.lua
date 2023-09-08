@@ -703,6 +703,12 @@ local servers = {
         enable = true,
       },
     },
+    procMacro = {
+      enable = true,
+      ignored = {
+        leptos_macro = { "server", "component" }
+      }
+    }
   },
   tsserver = {},
 
