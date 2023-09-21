@@ -727,7 +727,7 @@ local servers = {
   tailwindcss = {},
   taplo = {},
   marksman = {},
-  -- angularls = {},
+  jdtls = {},
 }
 
 local filetypes = {
