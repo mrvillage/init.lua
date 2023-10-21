@@ -429,10 +429,10 @@ require('term-edit').setup({
 })
 require('formatter').setup({
   filetype = {
-    javascript = require("formatter.filetypes.javascript").prettier,
-    typescript = require("formatter.filetypes.typescript").prettier,
-    javascriptreact = require("formatter.filetypes.javascriptreact").prettier,
-    typescriptreact = require("formatter.filetypes.typescriptreact").prettier,
+    -- javascript = require("formatter.filetypes.javascript").prettier,
+    -- typescript = require("formatter.filetypes.typescript").prettier,
+    -- javascriptreact = require("formatter.filetypes.javascriptreact").prettier,
+    -- typescriptreact = require("formatter.filetypes.typescriptreact").prettier,
     graphql = require("formatter.filetypes.graphql").prettier,
     css = require("formatter.filetypes.css").prettier,
     markdown = require("formatter.filetypes.markdown").prettier,
