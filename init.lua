@@ -489,7 +489,10 @@ vim.keymap.set('n', '<leader>sw', require('telescope.builtin').grep_string, { de
 vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
 vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 vim.keymap.set('n', '<leader>rs', require('telescope.builtin').resume, { desc = '[R]esume [S]earch' })
+vim.keymap.set('n', '<leader>rp', require('telescope.builtin').resume, { desc = '[R]esume [P]icker' })
 vim.keymap.set('n', '<leader>sp', require('telescope.builtin').pickers, { desc = '[S]how [P]ickers' })
+
+vim.keymap.set('n', '<leader>sr', require('telescope.builtin').registers, { desc = '[S]earch [R]egisters' })
 
 vim.keymap.set('n', '<leader>ds', require('telescope.builtin').lsp_document_symbols, { desc = '[D]ocument [S]ymbols' })
 vim.keymap.set('n', '<leader>dd', function() require('telescope.builtin').diagnostics({ bufnr = 0 }) end,
@@ -498,7 +501,7 @@ vim.keymap.set('n', '<leader>ws', require('telescope.builtin').lsp_dynamic_works
   { desc = '[W]orkspace [S]ymbols' })
 vim.keymap.set('n', '<leader>i', vim.lsp.buf.hover)
 vim.keymap.set('i', '<C-i>', vim.lsp.buf.hover, { noremap = true })
-vim.keymap.set('n', '<leader>sr', require('telescope.builtin').oldfiles, { desc = '[S]earch [r]ecently opened files' })
+vim.keymap.set('n', '<leader>so', require('telescope.builtin').oldfiles, { desc = '[S]earch [r]ecently opened files' })
 vim.keymap.set('n', '<leader>sc', function()
   -- You can pass additional configuration to telescope to change theme, layout, etc.
   require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
