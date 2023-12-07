@@ -900,12 +900,9 @@ vim.keymap.set('n', '<leader>pp', ':terminal mrvillage run deploy-pnw -ps<CR>')
 -- Some shortcuts to resolve common typos
 vim.api.nvim_create_user_command('W', 'w', {})
 vim.api.nvim_create_user_command('Q', 'q', {})
+vim.api.nvim_create_user_command('Wq', 'wq', {})
+vim.api.nvim_create_user_command('WQ', 'wq', {})
+vim.api.nvim_create_user_command('Qa', 'qa', {})
+vim.api.nvim_create_user_command('QA', 'qa', {})
 -- The line beneath this is called `modeline`. See `:help modeline`
--- vim: ts=2 sts=2 sw=2 et
--- vim: ts=2 sts=2 sw=2 et
--- vim: ts=2 sts=2 sw=2 et
--- vim: ts=2 sts=2 sw=2 et
--- vim: ts=2 sts=2 sw=2 et
--- vim: ts=2 sts=2 sw=2 et
--- vim: ts=2 sts=2 sw=2 et
 -- vim: ts=2 sts=2 sw=2 et
