@@ -168,10 +168,8 @@ require('lazy').setup({
       'lukas-reineke/indent-blankline.nvim',
       -- Enable `lukas-reineke/indent-blankline.nvim`
       -- See `:help indent_blankline.txt`
-      opts = {
-        char = '┊',
-        show_trailing_blankline_indent = false,
-      },
+      main = "ibl",
+      opts = {},
     },
 
     -- "gc" to comment visual regions/lines
@@ -278,7 +276,8 @@ vim.o.hlsearch = false
 vim.wo.number = true
 
 -- Enable mouse mode
-vim.o.mouse = 'a'
+-- vim.o.mouse = 'a'
+vim.o.mouse = ''
 
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
@@ -335,6 +334,8 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   group = highlight_group,
   pattern = '*',
 })
+
+require("ibl").setup()
 
 require('lsp_signature').setup({
   toggle_key = '<C-k>',
@@ -555,9 +556,7 @@ vim.keymap.set("v", "M",
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim', 'bash', 'css',
-    'dart', 'dockerfile', 'gitignore', 'html', 'java', 'json', 'jsdoc', 'javascript', 'latex', 'php', 'phpdoc', 'prisma',
-    'regex', 'sql', 'yaml', 'graphql', 'markdown', 'markdown_inline', 'lalrpop', 'toml' },
+  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim', 'bash', 'css', 'dart', 'dockerfile', 'gitignore', 'html', 'java', 'json', 'jsdoc', 'javascript', 'julia', 'latex', 'php', 'phpdoc', 'prisma', 'r', 'regex', 'sql', 'yaml', 'graphql', 'markdown', 'markdown_inline', 'lalrpop', 'toml' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
@@ -617,10 +616,6 @@ require('nvim-treesitter.configs').setup {
       },
     },
   },
-  context_commentstring = {
-    enable = true,
-    enable_autocmd = false,
-  },
 }
 
 -- Diagnostic keymaps
@@ -668,10 +663,9 @@ local on_attach = function(client, bufnr)
   vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
     vim.lsp.buf.format()
   end, { desc = 'Format current buffer with LSP' })
-  -- if client.server_capabilities.inlayHintProvider then
-  --   vim.lsp.buf.inlay_hint(bufnr, true)
-  -- end
 end
+
+vim.lsp.inlay_hint.enable(true)
 
 -- Enable the following language servers
 --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
@@ -680,7 +674,7 @@ end
 --  the `settings` field of the server config. You must look up that documentation yourself.
 local servers = {
   clangd = {},
-  -- gopls = {},
+  gopls = {},
   pyright = {},
   rust_analyzer = {
     ['rust-analyzer'] = {
@@ -771,6 +765,9 @@ local servers = {
   taplo = {},
   marksman = {},
   jdtls = {},
+  julials = {},
+  r_language_server = {},
+  bashls = {},
 }
 
 local filetypes = {
