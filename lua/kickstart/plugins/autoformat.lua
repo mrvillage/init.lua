@@ -52,7 +52,7 @@ return {
 
         -- Create an autocmd that will run *before* we save the buffer.
         --  Run the formatting command for the LSP that has just attached.
-        if client.name ~= 'tsserver' then
+        if client.name ~= 'ts_ls' then
           vim.api.nvim_create_autocmd('BufWritePre', {
             group = get_augroup(client),
             buffer = bufnr,

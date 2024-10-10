@@ -250,6 +250,15 @@ require('lazy').setup({
     'chomosuke/term-edit.nvim',
     'mhartington/formatter.nvim',
     'ThePrimeagen/vim-be-good',
+    {
+      "lervag/vimtex",
+      lazy = false, -- we don't want to lazy load VimTeX
+      -- tag = "v2.15", -- uncomment to pin to a specific release
+      init = function()
+        -- VimTeX configuration goes here, e.g.
+        vim.g.vimtex_view_method = "zathura"
+      end
+    },
     'laytan/cloak.nvim',
   },
   {
@@ -556,7 +565,7 @@ vim.keymap.set("v", "M",
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim', 'bash', 'css', 'dart', 'dockerfile', 'gitignore', 'html', 'java', 'json', 'jsdoc', 'javascript', 'julia', 'latex', 'php', 'phpdoc', 'prisma', 'r', 'regex', 'sql', 'yaml', 'graphql', 'markdown', 'markdown_inline', 'lalrpop', 'toml' },
+  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim', 'bash', 'css', 'dart', 'dockerfile', 'gitignore', 'html', 'java', 'json', 'jsdoc', 'javascript', 'julia', 'latex', 'php', 'phpdoc', 'prisma', 'r', 'regex', 'sql', 'yaml', 'graphql', 'markdown', 'markdown_inline', 'lalrpop', 'toml', 'haskell' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
@@ -645,7 +654,7 @@ local on_attach = function(client, bufnr)
 
   nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-  nmap('gI', vim.lsp.buf.implementation, '[G]oto [I]mplementation')
+  nmap('gi', vim.lsp.buf.implementation, '[G]oto [I]mplementation')
   nmap('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
 
   -- See `:help K` for why this keymap
@@ -721,9 +730,6 @@ local servers = {
       },
       procMacro = {
         enable = true,
-        ignored = {
-          leptos_macro = { "server", "component" }
-        }
       },
       semanticHighlighting = {
         punctuation = {
@@ -743,7 +749,7 @@ local servers = {
       },
     },
   },
-  tsserver = {
+  ts_ls = {
     preferences = {
       importModuleSpecifierPreference = "non-relative",
     },
@@ -768,6 +774,8 @@ local servers = {
   julials = {},
   r_language_server = {},
   bashls = {},
+  texlab = {},
+  hls = {},
 }
 
 local filetypes = {
