@@ -57,6 +57,16 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
+vim.opt.spell = false
+vim.api.nvim_create_autocmd({ "FileType" }, {
+  pattern = { "text", "plaintex", "tex", "markdown", "gitcommit", "mdx" },
+  callback = function()
+    vim.opt_local.spell = true
+    vim.opt_local.spelllang = "en_us"
+  end,
+  desc = "Enable spell checking for text files",
+})
+
 -- NOTE: Here is where you install your plugins.
 --  You can configure plugins using the `config` key.
 --
@@ -746,6 +756,9 @@ local servers = {
         expressionAdjustmentHints = {
           enable = "always",
         },
+      },
+      diagnostics = {
+        refreshSupport = false,
       },
     },
   },
