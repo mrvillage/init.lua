@@ -693,7 +693,7 @@ vim.lsp.inlay_hint.enable(true)
 --  the `settings` field of the server config. You must look up that documentation yourself.
 local servers = {
   clangd = {},
-  gopls = {},
+  -- gopls = {},
   pyright = {},
   rust_analyzer = {
     ['rust-analyzer'] = {
@@ -788,7 +788,7 @@ local servers = {
   r_language_server = {},
   bashls = {},
   texlab = {},
-  hls = {},
+  -- hls = {},
 }
 
 local filetypes = {
