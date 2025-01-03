@@ -284,7 +284,7 @@ require('lazy').setup({
         vim.g.vimtex_view_method = "zathura"
       end
     },
-    'laytan/cloak.nvim',
+    -- 'laytan/cloak.nvim',
   },
   {
     git = {
@@ -847,20 +847,20 @@ mason_lspconfig.setup_handlers {
   end,
 }
 
-require('cloak').setup({
-  enabled = true,
-  cloak_character = '*',
-  highlight_group = "Comment",
-  cloak_length = nil,
-  try_all_patterns = true,
-  patterns = {
-    {
-      file_pattern = ".env*",
-      cloak_pattern = "=.*",
-      replace = nil,
-    },
-  },
-})
+-- require('cloak').setup({
+--   enabled = true,
+--   cloak_character = '*',
+--   highlight_group = "Comment",
+--   cloak_length = nil,
+--   try_all_patterns = true,
+--   patterns = {
+--     {
+--       file_pattern = ".env*",
+--       cloak_pattern = "=.*",
+--       replace = nil,
+--     },
+--   },
+-- })
 
 -- [[ Configure nvim-cmp ]]
 -- See `:help cmp`
@@ -907,7 +907,11 @@ cmp.setup {
   },
   sources = {
     { name = 'nvim_lsp' },
-    { name = 'luasnip' },
+    { name = 'luasnip', entry_filter = function(entry)
+      -- filter if the entry has the name "snippet"
+      return require("cmp").lsp.CompletionItemKind.Snippet ~= entry:get_kind()
+    end
+    },
   },
 }
 
