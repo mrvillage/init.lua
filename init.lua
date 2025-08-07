@@ -102,6 +102,13 @@ require('lazy').setup({
     {
       -- LSP Configuration & Plugins
       'neovim/nvim-lspconfig',
+      opts = {
+        setup = {
+          rust_analyzer = function()
+            return true
+          end,
+        },
+      },
       dependencies = {
         -- Automatically install LSPs to stdpath for neovim
         { 'williamboman/mason.nvim', config = true },
@@ -115,6 +122,7 @@ require('lazy').setup({
         'folke/neodev.nvim',
       },
     },
+    'WhoIsSethDaniel/mason-tool-installer.nvim',
 
     {
       -- Autocompletion
@@ -235,6 +243,7 @@ require('lazy').setup({
         require("nvim-treesitter.install").compilers = { "clang" }
       end,
     },
+    -- 'nvim-treesitter/nvim-treesitter-context',
 
     -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
     --       These are some example plugins that I've included in the kickstart repository.
@@ -251,16 +260,7 @@ require('lazy').setup({
     -- { import = 'custom.plugins' },
 
     'github/copilot.vim',
-    {
-      'kdheepak/lazygit.nvim',
-      dependencies = {
-        'nvim-lua/plenary.nvim',
-        'nvim-telescope/telescope.nvim',
-      },
-      config = function()
-        require("telescope").load_extension("lazygit")
-      end
-    },
+    'akinsho/toggleterm.nvim',
     {
       'nvim-telescope/telescope-file-browser.nvim',
       dependencies = {
@@ -285,6 +285,58 @@ require('lazy').setup({
       end
     },
     -- 'laytan/cloak.nvim',
+    {
+      'mrcjkb/rustaceanvim',
+      version = '^5', -- Recommended
+      lazy = false,   -- This plugin is already lazy
+    },
+    -- {
+    --   "yetone/avante.nvim",
+    --   event = "VeryLazy",
+    --   version = false, -- Never set this value to "*"! Never!
+    --   opts = {
+    --   },
+    --   -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
+    --   build = "make",
+    --   -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
+    --   dependencies = {
+    --     "nvim-treesitter/nvim-treesitter",
+    --     "stevearc/dressing.nvim",
+    --     "nvim-lua/plenary.nvim",
+    --     "MunifTanjim/nui.nvim",
+    --     --- The below dependencies are optional,
+    --     "nvim-telescope/telescope.nvim", -- for file_selector provider telescope
+    --     "hrsh7th/nvim-cmp",              -- autocompletion for avante commands and mentions
+    --     "ibhagwan/fzf-lua",              -- for file_selector provider fzf
+    --     "nvim-tree/nvim-web-devicons",   -- or echasnovski/mini.icons
+    --     -- "zbirenbaum/copilot.lua",        -- for providers='copilot'
+    --     {
+    --       -- support for image pasting
+    --       "HakonHarnes/img-clip.nvim",
+    --       event = "VeryLazy",
+    --       opts = {
+    --         -- recommended settings
+    --         default = {
+    --           embed_image_as_base64 = false,
+    --           prompt_for_file_name = false,
+    --           drag_and_drop = {
+    --             insert_mode = true,
+    --           },
+    --           -- required for Windows users
+    --           use_absolute_path = true,
+    --         },
+    --       },
+    --     },
+    --     {
+    --       -- Make sure to set this up properly if you have lazy=true
+    --       'MeanderingProgrammer/render-markdown.nvim',
+    --       opts = {
+    --         file_types = { "markdown", "Avante" },
+    --       },
+    --       ft = { "markdown", "Avante" },
+    --     },
+    --   },
+    -- }
   },
   {
     git = {
@@ -293,11 +345,17 @@ require('lazy').setup({
   }
 )
 
+vim.g.copilot_filetypes = { ['env'] = false }
+
 -- Theme settings
 require("onedark").setup {
   style = "warmer",
 }
 require("onedark").load()
+
+-- require("treesitter-context").setup({
+--   max_lines = 3,
+-- })
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
@@ -396,7 +454,6 @@ table.insert(vimgrep_arguments, '--glob')
 table.insert(vimgrep_arguments, '!**/.git/*')
 
 telescope.load_extension("file_browser")
-telescope.load_extension("lazygit")
 telescope.load_extension("live_grep_args")
 telescope.load_extension("harpoon")
 
@@ -552,8 +609,10 @@ vim.keymap.set({ 'n', 'v' }, '<C-k>', function()
   { silent = true, noremap = true, desc = 'Toggle [K]eyboard signature' })
 
 -- harpoon
-vim.keymap.set("n", "<leader>h", require("harpoon.ui").toggle_quick_menu, { noremap = true, silent = true })
-vim.keymap.set("n", "<leader>a", require("harpoon.mark").add_file, { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>hh", require("harpoon.ui").toggle_quick_menu,
+  { noremap = true, silent = true, desc = '[H]arpoon [H]arpoon' })
+vim.keymap.set("n", "<leader>ha", require("harpoon.mark").add_file,
+  { noremap = true, silent = true, desc = '[H]arpoon [A]dd file' })
 for idx = 1, 9 do
   vim.keymap.set("n", "<leader>t" .. idx,
     ':lua require("harpoon.term").gotoTerminal({idx = ' .. idx .. '})<CR>',
@@ -590,7 +649,7 @@ vim.keymap.set("v", "M",
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim', 'bash', 'css', 'dart', 'dockerfile', 'gitignore', 'html', 'java', 'json', 'jsdoc', 'javascript', 'julia', 'latex', 'php', 'phpdoc', 'prisma', 'r', 'regex', 'sql', 'yaml', 'graphql', 'markdown', 'markdown_inline', 'lalrpop', 'toml', 'haskell' },
+  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim', 'bash', 'css', 'dart', 'dockerfile', 'gitignore', 'html', 'java', 'json', 'jsdoc', 'javascript', 'julia', 'latex', 'php', 'phpdoc', 'prisma', 'r', 'regex', 'sql', 'yaml', 'graphql', 'markdown', 'markdown_inline', 'lalrpop', 'toml', 'haskell', 'zig' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
@@ -701,6 +760,101 @@ end
 
 vim.lsp.inlay_hint.enable(true)
 
+vim.g.rustaceanvim = {
+  tools = {
+    test_executor = 'background',
+  },
+  server = {
+    on_attach = function(_, bufnr)
+      vim.keymap.set('n', '<leader>re', function()
+        vim.cmd.RustLsp('expandMacro')
+      end, { silent = true, buffer = bufnr, desc = '[R]ust [E]xpand Macro' })
+      vim.keymap.set('n', '<leader>rb', function()
+        vim.cmd.RustLsp('rebuildProcMacros')
+      end, { silent = true, buffer = bufnr, desc = '[R]ust Re[b]uild Proc Macros' })
+      vim.keymap.set('n', '<leader>ra', function()
+        vim.cmd.RustLsp('codeAction')
+      end, { silent = true, buffer = bufnr, desc = '[R]ust Code [A]ction' })
+      vim.keymap.set('n', '<leader>rj', function()
+        vim.cmd.RustLsp('joinLines')
+      end, { silent = true, buffer = bufnr, desc = '[R]ust [J]oin Lines' })
+      vim.keymap.set('v', '<leader>rj', function()
+        vim.cmd.RustLsp('joinLines')
+      end, { silent = true, buffer = bufnr, desc = '[R]ust [J]oin Lines' })
+      vim.keymap.set('n', '<leader>rg', function()
+        vim.cmd.RustLsp { 'crateGraph', '[backend]', '[output]' }
+      end, { silent = true, buffer = bufnr, desc = '[R]ust Crate [G]raph' })
+    end,
+    default_settings = {
+      ['rust-analyzer'] = {
+        cargo = {
+          allFeatures = true,
+        },
+        hover = {
+          actions = {
+            references = {
+              enable = true,
+            },
+          },
+        },
+        checkOnSave = {
+          command = 'clippy',
+        },
+        imports = {
+          granularity = {
+            enforce = true,
+          },
+        },
+        lens = {
+          enable = true,
+          location = 'above_whole_item',
+          references = {
+            adt = {
+              enable = true,
+            },
+            enumVariant = {
+              enable = true,
+            },
+            method = {
+              enable = true,
+            },
+            trait = {
+              enable = true,
+            },
+          },
+        },
+        typing = {
+          autoClosingAngleBrackets = {
+            enable = true,
+          },
+        },
+        procMacro = {
+          enable = true,
+        },
+        semanticHighlighting = {
+          punctuation = {
+            enable = true,
+          },
+        },
+        inlayHints = {
+          lifetimeElisionHints = {
+            enable = "always",
+          },
+          closureReturnTypeHints = {
+            enable = "always",
+          },
+          expressionAdjustmentHints = {
+            enable = "always",
+          },
+        },
+        diagnostics = {
+          refreshSupport = false,
+        },
+      },
+    }
+  }
+}
+
 -- Enable the following language servers
 --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
 --
@@ -710,73 +864,7 @@ local servers = {
   clangd = {},
   -- gopls = {},
   pyright = {},
-  rust_analyzer = {
-    ['rust-analyzer'] = {
-      cargo = {
-        allFeatures = true,
-      },
-      hover = {
-        actions = {
-          references = {
-            enable = true,
-          },
-        },
-      },
-      checkOnSave = {
-        command = 'clippy',
-      },
-      imports = {
-        granularity = {
-          enforce = true,
-        },
-      },
-      lens = {
-        enable = true,
-        location = 'above_whole_item',
-        references = {
-          adt = {
-            enable = true,
-          },
-          enumVariant = {
-            enable = true,
-          },
-          method = {
-            enable = true,
-          },
-          trait = {
-            enable = true,
-          },
-        },
-      },
-      typing = {
-        autoClosingAngleBrackets = {
-          enable = true,
-        },
-      },
-      procMacro = {
-        enable = true,
-      },
-      semanticHighlighting = {
-        punctuation = {
-          enable = true,
-        },
-      },
-      inlayHints = {
-        lifetimeElisionHints = {
-          enable = "always",
-        },
-        closureReturnTypeHints = {
-          enable = "always",
-        },
-        expressionAdjustmentHints = {
-          enable = "always",
-        },
-      },
-      diagnostics = {
-        refreshSupport = false,
-      },
-    },
-  },
+  -- rust_analyzer = {},
   ts_ls = {
     preferences = {
       importModuleSpecifierPreference = "non-relative",
@@ -804,6 +892,7 @@ local servers = {
   bashls = {},
   texlab = {},
   -- hls = {},
+  zls = {},
 }
 
 local filetypes = {
@@ -828,24 +917,52 @@ require('neodev').setup()
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
--- Ensure the servers above are installed
-local mason_lspconfig = require 'mason-lspconfig'
+local ensure_installed = vim.tbl_keys(servers or {})
+vim.list_extend(ensure_installed, {
+  'stylua', -- Used to format Lua code
+})
+require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
-mason_lspconfig.setup {
-  ensure_installed = vim.tbl_keys(servers),
-}
+for server_name, server in pairs(servers) do
+  -- This handles overriding only values explicitly passed
+  -- by the server configuration above. Useful when disabling
+  -- certain features of an LSP (for example, turning off formatting for ts_ls)
+  server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+  require('lspconfig')[server_name].setup {
+    init_options = init_options[server_name] or nil,
+    filetypes = filetypes[server_name] or nil,
+    capabilities = capabilities,
+    on_attach = on_attach,
+    settings = server,
+  }
+end
 
-mason_lspconfig.setup_handlers {
-  function(server_name)
-    require('lspconfig')[server_name].setup {
-      init_options = init_options[server_name] or nil,
-      filetypes = filetypes[server_name] or nil,
-      capabilities = capabilities,
-      on_attach = on_attach,
-      settings = servers[server_name],
-    }
-  end,
-}
+require("lspconfig").dartls.setup({
+  cmd = { "/home/village/.flutter/bin/dart", "language-server", "--protocol=lsp" },
+  on_attach = on_attach,
+  capabilities = capabilities,
+})
+
+-- require('mason-lspconfig').setup {
+-- ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
+-- automatic_installation = false,
+-- handlers = {
+--   function(server_name)
+--     local server = servers[server_name] or {}
+--     -- This handles overriding only values explicitly passed
+--     -- by the server configuration above. Useful when disabling
+--     -- certain features of an LSP (for example, turning off formatting for ts_ls)
+--     server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+--     require('lspconfig')[server_name].setup {
+--       init_options = init_options[server_name] or nil,
+--       filetypes = filetypes[server_name] or nil,
+--       capabilities = capabilities,
+--       on_attach = on_attach,
+--       settings = servers[server_name],
+--     }
+--   end,
+-- },
+-- }
 
 -- require('cloak').setup({
 --   enabled = true,
@@ -915,8 +1032,31 @@ cmp.setup {
   },
 }
 
-vim.keymap.set('n', '<leader>g', require('lazygit').lazygitcurrentfile)
--- vim.keymap.set('n', '<leader>gg', require('lazygit').lazygitcurrentfile)
+local Terminal = require('toggleterm.terminal').Terminal
+local lazygit  = Terminal:new({
+  cmd = "lazygit",
+  dir = "git_dir",
+  direction = "float",
+  float_opts = {
+    border = "double",
+  },
+  -- function to run on opening the terminal
+  on_open = function(term)
+    vim.cmd("startinsert!")
+    vim.api.nvim_buf_set_keymap(term.bufnr, "n", "q", "<cmd>close<CR>", { noremap = true, silent = true })
+  end,
+  -- function to run on closing the terminal
+  on_close = function(term)
+    vim.cmd("startinsert!")
+  end,
+})
+
+function _lazygit_toggle()
+  lazygit:toggle()
+end
+
+vim.api.nvim_set_keymap("n", "<leader>g", "<cmd>lua _lazygit_toggle()<CR>", { noremap = true, silent = true })
+
 vim.keymap.set('n', '<leader>q', function()
   vim.api.nvim_buf_delete(vim.api.nvim_get_current_buf(),
     { force = vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf()):find('term://', 1, true) == 1 })
@@ -954,6 +1094,26 @@ vim.keymap.set('n', '<leader>mr', ':terminal mrvillage run ')
 vim.keymap.set('n', '<leader>ps', ':terminal mrvillage run deploy-pnw -s<CR>')
 vim.keymap.set('n', '<leader>pp', ':terminal mrvillage run deploy-pnw -ps<CR>')
 
+-- avante
+-- require("avante").setup({
+--   debug = true,
+--   provider = "claude",
+--   -- provider = "ollama",
+--   claude = {
+--     endpoint = "https://api.anthropic.com",
+--     model = "claude-sonnet-4-20250514",
+--     -- model = "claude-3-7-sonnet-20250219",
+--     temperature = 0,
+--     max_tokens = 50000,
+--   },
+--   ollama = {
+--     -- endpoint = "http://127.0.0.1:11434", -- Note that there is no /v1 at the end.
+--     endpoint = "http://172.24.176.1:11434",
+--     model = "qwq:latest",
+--   },
+-- })
+
+-- vim.keymap.set('n', '<leader>al', function() vim.cmd(':AvanteClear') end, { desc = '[A]vante C[l]ear' })
 -- Some shortcuts to resolve common typos
 vim.api.nvim_create_user_command('W', 'w', {})
 vim.api.nvim_create_user_command('Q', 'q', {})
